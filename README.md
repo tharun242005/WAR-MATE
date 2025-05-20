@@ -45,38 +45,12 @@ npm install
 npm run dev
 Once started, Vite will launch the development server, usually available at http://localhost:5173.
 
-Firebase Deployment
+# Firebase Deployment
+
 This project uses Firebase Hosting to deploy the production build. To deploy the app:
 
-bash
-Copy
-Edit
-# Step 1: Build the project for production
+## Step 1: Build the project for production
 npm run build
 
-# Step 2: Deploy to Firebase
-firebase deploy
-The static files in the dist/ folder will be served from Firebase Hosting at:
-https://war-mate.web.app/
 
-Credits
-React, Vite, TypeScript, Tailwind CSS, shadcn/ui – For frontend development and styling.
 
-Firebase Hosting – For static site deployment and global delivery.
-
-Open source communities – Thanks to the open-source tools and libraries that made this project possible.
-
-Contributing
-Contributions are welcome! If you'd like to improve this project, please follow these steps:
-
-Fork the repository.
-
-Create a new branch: git checkout -b feature/your-feature-name
-
-Make your changes and commit them: git commit -m 'Add some feature'
-
-Push to the branch: git push origin feature/your-feature-name
-
-Open a Pull Request and describe your changes clearly.
-
-Please ensure your code follows the existing style and passes all tests.
