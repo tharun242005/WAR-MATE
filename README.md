@@ -16,7 +16,7 @@ For styling and layout, **Tailwind CSS** is used, a utility-first CSS framework 
 
 ### Backend & Hosting
 
-The backend logic and database are minimal or externalized; the main focus is on the frontend app. The finished app is deployed on **Firebase Hosting**, delivering a fast and secure static site globally.
+The backend logic and database are minimal or externalized with SUPA BASE ; the main focus is on the frontend app. The finished app is deployed on **Firebase Hosting**, delivering a fast and secure static site globally.
 
 #### Languages Used
 
@@ -56,23 +56,12 @@ npm run build
 ## Step 2: Deploy to Firebase
 
 firebase deploy
-
+```
 The static files in the dist/ folder will be served from Firebase Hosting at:  
 https://war-mate.web.app/
 
----
 
 ## Deployment & Supabase Integration
-
-## Tech Stack
-
-### Frontend
-
-The frontend is built with **React** (a JavaScript library for building UIs) and **TypeScript** (a typed superset of JavaScript) for robust development. We use **Vite** as the build tool, providing a fast development experience. UI components are styled using **shadcn/ui**, an open-source React component library.
-
-For styling and layout, **Tailwind CSS** is used, a utility-first CSS framework that enables rapid and consistent UI design with pre-built utility classes.
-
-### Backend
 
 The backend is powered by **Supabase**, an open-source Firebase alternative providing a dedicated **PostgreSQL** database. This setup allows full SQL access and management via Supabase’s SQL editor. The database schema includes tables like `chat_messages`, and relationships are visualized in **er.png**. The Supabase project is managed under the organization `tharun242005`.
 
