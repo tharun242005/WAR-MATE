@@ -1,73 +1,82 @@
-# Welcome to your Lovable project
+# 🪖 WarMate Chatbot - Indian Army Inspired
 
-## Project info
+## Overview
 
-**URL**: https://lovable.dev/projects/91872a58-d070-493a-b3f0-47435ab60cb5
+This repository hosts the **WarMate Chatbot**, a tactical battlefield assistant inspired by the Indian Army. The frontend is built with modern web technologies, and the project is deployed as a static site on Firebase Hosting. 
 
-## How can I edit this code?
+Explore the live app here: [https://war-mate.web.app/](https://war-mate.web.app/)
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+### Frontend
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/91872a58-d070-493a-b3f0-47435ab60cb5) and start prompting.
+The frontend is built with **React** (a JavaScript library for building UIs) and **TypeScript** (a typed superset of JavaScript) for robust development. We use **Vite** as the build tool, providing a fast development experience. UI components are styled using **shadcn/ui**, an open-source React component library.
 
-Changes made via Lovable will be committed automatically to this repo.
+For styling and layout, **Tailwind CSS** is used, a utility-first CSS framework that enables rapid and consistent UI design with pre-built utility classes.
 
-**Use your preferred IDE**
+### Backend & Hosting
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+The backend logic and database are minimal or externalized; the main focus is on the frontend app. The finished app is deployed on **Firebase Hosting**, delivering a fast and secure static site globally.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+#### Languages Used
 
-Follow these steps:
+| Language   | Role                                         |
+|------------|----------------------------------------------|
+| TypeScript | Frontend application code (React components) |
+| JavaScript | Core logic and scripts                        |
+| HTML       | Markup for the frontend structure            |
+| CSS        | Styling via Tailwind CSS utility classes     |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Getting Started
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+**Prerequisites:** Install **Node.js** and **npm** (Node’s package manager). Then follow these steps to run the project locally:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+# Step 1: Clone the repository
+git clone https://github.com/tharun242005/WAR-MATE.git
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 2: Navigate to the project directory
+cd WAR-MATE
+
+# Step 3: Install dependencies
+npm install
+
+# Step 4: Start the development server
 npm run dev
-```
+Once started, Vite will launch the development server, usually available at http://localhost:5173.
 
-**Edit a file directly in GitHub**
+Firebase Deployment
+This project uses Firebase Hosting to deploy the production build. To deploy the app:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+bash
+Copy
+Edit
+# Step 1: Build the project for production
+npm run build
 
-**Use GitHub Codespaces**
+# Step 2: Deploy to Firebase
+firebase deploy
+The static files in the dist/ folder will be served from Firebase Hosting at:
+https://war-mate.web.app/
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Credits
+React, Vite, TypeScript, Tailwind CSS, shadcn/ui – For frontend development and styling.
 
-## What technologies are used for this project?
+Firebase Hosting – For static site deployment and global delivery.
 
-This project is built with:
+Open source communities – Thanks to the open-source tools and libraries that made this project possible.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Contributing
+Contributions are welcome! If you'd like to improve this project, please follow these steps:
 
-## How can I deploy this project?
+Fork the repository.
 
-Simply open [Lovable](https://lovable.dev/projects/91872a58-d070-493a-b3f0-47435ab60cb5) and click on Share -> Publish.
+Create a new branch: git checkout -b feature/your-feature-name
 
-## Can I connect a custom domain to my Lovable project?
+Make your changes and commit them: git commit -m 'Add some feature'
 
-Yes, you can!
+Push to the branch: git push origin feature/your-feature-name
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Open a Pull Request and describe your changes clearly.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Please ensure your code follows the existing style and passes all tests.
