@@ -50,13 +50,14 @@ Once started, Vite will launch the development server, usually available at http
 This project uses Firebase Hosting to deploy the production build. To deploy the app:
 
 ## Step 1: Build the project for production
+
 npm run build
 
-Step 2: Deploy to Firebase
+## Step 2: Deploy to Firebase
 
 firebase deploy
 
-The static files in the dist/ folder will be served from Firebase Hosting at:
+The static files in the dist/ folder will be served from Firebase Hosting at:  
 https://war-mate.web.app/
 
 ---
