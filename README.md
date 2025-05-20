@@ -59,3 +59,14 @@ firebase deploy
 The static files in the dist/ folder will be served from Firebase Hosting at:
 https://war-mate.web.app/
 
+
+## Deployment & Supabase Integration
+
+The app is deployed on **Firebase Hosting**. Firebase allows deploying React/Vite static sites with one command (e.g. `firebase deploy`), delivering fast, SSL-secured content globally. On the backend, we leverage our Supabase project under the `tharun242005` organization. Supabase gives us a PostgreSQL database (allowing full SQL access) and a SQL editor for creating tables and queries. For example, our data schema includes a `chat_messages` table defined via SQL, and the relationships are visualized in **er.png**. Credits go to Supabase for the backend infrastructure and to our Supabase organization (`tharun242005`) for providing the database backend.
+
+## Credits
+
+* **Supabase** – Open-source Firebase alternative (PostgreSQL database); used for the backend (organization: `tharun242005`).
+* **shadcn/ui** – Free, open-source React component library used for UI components.
+* **React, Vite, CSS, Firebase**, and other open-source tools – Used extensively for frontend development and deployment.
+
