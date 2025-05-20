@@ -59,6 +59,8 @@ firebase deploy
 The static files in the dist/ folder will be served from Firebase Hosting at:
 https://war-mate.web.app/
 
+---
+## Deployment & Supabase Integration
 
 ## Tech Stack
 
