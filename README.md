@@ -52,5 +52,10 @@ This project uses Firebase Hosting to deploy the production build. To deploy the
 ## Step 1: Build the project for production
 npm run build
 
+Step 2: Deploy to Firebase
 
+firebase deploy
+
+The static files in the dist/ folder will be served from Firebase Hosting at:
+https://war-mate.web.app/
 
