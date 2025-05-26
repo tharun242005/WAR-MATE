@@ -1,73 +1,76 @@
-# Welcome to your Lovable project
+# 🪖 WarMate Chatbot - Indian Army Inspired
 
-## Project info
+## Overview
 
-**URL**: https://lovable.dev/projects/91872a58-d070-493a-b3f0-47435ab60cb5
+This repository hosts the **WarMate Chatbot**, a tactical battlefield assistant inspired by the Indian Army. The frontend is built with modern web technologies, and the project is deployed as a static site on Firebase Hosting. 
 
-## How can I edit this code?
+Explore the live app here: [https://war-mate.web.app/](https://war-mate.web.app/)
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+### Frontend
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/91872a58-d070-493a-b3f0-47435ab60cb5) and start prompting.
+The frontend is built with **React** (a JavaScript library for building UIs) and **TypeScript** (a typed superset of JavaScript) for robust development. We use **Vite** as the build tool, providing a fast development experience. UI components are styled using **shadcn/ui**, an open-source React component library.
 
-Changes made via Lovable will be committed automatically to this repo.
+For styling and layout, **Tailwind CSS** is used, a utility-first CSS framework that enables rapid and consistent UI design with pre-built utility classes.
 
-**Use your preferred IDE**
+### Backend & Hosting
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+The backend logic and database are minimal or externalized with SUPA BASE ; the main focus is on the frontend app. The finished app is deployed on **Firebase Hosting**, delivering a fast and secure static site globally.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+#### Languages Used
 
-Follow these steps:
+| Language   | Role                                         |
+|------------|----------------------------------------------|
+| TypeScript | Frontend application code (React components) |
+| JavaScript | Core logic and scripts                        |
+| HTML       | Markup for the frontend structure            |
+| CSS        | Styling via Tailwind CSS utility classes     |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Getting Started
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+**Prerequisites:** Install **Node.js** and **npm** (Node’s package manager). Then follow these steps to run the project locally:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+# Step 1: Clone the repository
+git clone https://github.com/tharun242005/WAR-MATE.git
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 2: Navigate to the project directory
+cd WAR-MATE
+
+# Step 3: Install dependencies
+npm install
+
+# Step 4: Start the development server
 npm run dev
+Once started, Vite will launch the development server, usually available at http://localhost:5173.
+
+# Firebase Deployment
+
+This project uses Firebase Hosting to deploy the production build. To deploy the app:
+
+## Step 1: Build the project for production
+
+npm run build
+
+## Step 2: Deploy to Firebase
+
+firebase deploy
 ```
+The static files in the dist/ folder will be served from Firebase Hosting at:  
+https://war-mate.web.app/
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Deployment & Supabase Integration
 
-**Use GitHub Codespaces**
+The backend is powered by **Supabase**, an open-source Firebase alternative providing a dedicated **PostgreSQL** database. This setup allows full SQL access and management via Supabase’s SQL editor. The database schema includes tables like `chat_messages`, and relationships are visualized in **er.png**. The Supabase project is managed under the organization `tharun242005`.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Deployment
 
-## What technologies are used for this project?
+The finished frontend is deployed to **Firebase Hosting**, which enables fast, SSL-secured, global delivery of static sites with a simple command (e.g., `firebase deploy`).
 
-This project is built with:
+### Credits
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/91872a58-d070-493a-b3f0-47435ab60cb5) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- **Supabase** – Backend infrastructure with PostgreSQL database (organization: `tharun242005`).
+- **shadcn/ui** – Open-source React component library for UI components.
+- **React, Vite, Tailwind CSS, Firebase**, and other open-source tools – Used extensively for frontend development and deployment.
