@@ -31,7 +31,7 @@ const LandingPage = () => {
 
           <nav className="hidden md:flex space-x-8">
             <a href="#features" className="text-gray-300 hover:text-battlefield-cyberTeal transition-colors">Features</a>
-            <a href="#" className="text-gray-300 hover:text-battlefield-cyberTeal transition-colors">Resources</a>
+            <a href="warmate research paper.docx" className="text-gray-300 hover:text-battlefield-cyberTeal transition-colors">Resources</a>
             <a href="mailto:run40081@gmail.com" className="text-gray-300 hover:text-battlefield-cyberTeal transition-colors">Support</a>
           </nav>
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Mic, ChevronRight, ChevronDown, User, Navigation, Cloud, Clock } from 'lucide-react';
+import { Send, Mic, ChevronRight, ChevronDown, User, Navigation, Cloud, Clock, Volume2, VolumeX } from 'lucide-react';
 import ChatMessage, { MessageType } from '../components/ChatMessage';
 import VoiceButton from '../components/VoiceButton';
 import CommandSuggestion from '../components/CommandSuggestion';
@@ -9,6 +9,7 @@ import { getChatMessages, saveChatMessage, clearChatHistory } from '@/services/c
 import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Footer from '@/components/Footer';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const ChatPage = () => {
   const { toast } = useToast();
@@ -26,18 +27,90 @@ const ChatPage = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [temperature, setTemperature] = useState(25); // Default in Celsius
+  const [temperature, setTemperature] = useState(25);
   const [localTime, setLocalTime] = useState<string>('');
   const [userHasScrolled, setUserHasScrolled] = useState(false);
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [voiceError, setVoiceError] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Declare Web Speech API types for TypeScript
+  // Initialize voices
+  useEffect(() => {
+    const loadVoices = () => {
+      const availableVoices = window.speechSynthesis.getVoices();
+      setVoices(availableVoices);
+      
+      // Try to find a deep male voice (for military style)
+      const preferredVoice = availableVoices.find(voice => 
+        voice.name.includes('Male') || 
+        voice.name.includes('David') ||
+        voice.name.includes('Google UK English Male')
+      );
+      
+      setSelectedVoice(preferredVoice || availableVoices[0]);
+    };
+    
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
 
-
+  // Speech function
+  const speak = (text: string, urgency: 'normal' | 'urgent' = 'normal') => {
+    if (!voiceEnabled || !('speechSynthesis' in window)) return;
+    
+    try {
+      // Cancel any current speech
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      // Configure voice
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
+      
+      // Adjust parameters based on urgency
+      if (urgency === 'urgent') {
+        utterance.rate = 1.1;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.2;
+      } else {
+        utterance.rate = 0.9;
+        utterance.pitch = 0.8;
+        utterance.volume = 1.0;
+      }
+      
+      // Add radio static effect before speaking
+      const playStatic = () => {
+        const audio = new Audio('/sounds/radio-static.mp3'); // Add this file to your public folder
+        audio.volume = 0.3;
+        audio.play();
+      };
+      
+      playStatic();
+      setTimeout(() => {
+        window.speechSynthesis.speak(utterance);
+      }, 300); // Short delay after static
+      
+      utterance.onerror = (event) => {
+        console.error('Speech error:', event);
+        setVoiceError(true);
+      };
+    } catch (error) {
+      console.error('Speech synthesis error:', error);
+      setVoiceError(true);
+    }
+  };
 
   // Enhanced command suggestions
   const commandSuggestions = [
@@ -53,8 +126,6 @@ const ChatPage = () => {
     "Communications check"
   ];
 
-
-  
   useEffect(() => {
     // Update local time every minute
     const updateTime = () => {
@@ -68,16 +139,12 @@ const ChatPage = () => {
     return () => clearInterval(timeInterval);
   }, []);
   
-  // Clear chat history and start fresh on each visit
+  // Initialize chat
   useEffect(() => {
     const initChat = async () => {
       try {
-        // Fixed the error with the UUID by removing the clearChatHistory call
-        // Instead, we'll just load messages on component mount
-        // await clearChatHistory();
         const chatMessages = await getChatMessages();
         if (chatMessages.length === 0) {
-          // Only use initial welcome message if no history exists
           setMessages([{
             id: '1',
             content: "Welcome soldier. I'm WarMate, your combat assistant. How can I support your mission today?",
@@ -95,27 +162,25 @@ const ChatPage = () => {
   
   // Scroll to bottom only when shouldScrollToBottom is true
   useEffect(() => {
-  if (shouldScrollToBottom && !userHasScrolled) {
-    scrollToBottom();
-    setShouldScrollToBottom(false);
-  }
-}, [shouldScrollToBottom, userHasScrolled]);
+    if (shouldScrollToBottom && !userHasScrolled) {
+      scrollToBottom();
+      setShouldScrollToBottom(false);
+    }
+  }, [shouldScrollToBottom, userHasScrolled]);
 
- const scrollToBottom = () => {
-  if (viewportRef.current) {
-    viewportRef.current.scrollTo({
-      top: viewportRef.current.scrollHeight,
-      behavior: 'smooth',
-    });
-  }
-};
-  // Track user scrolling - now with improved logic
+  const scrollToBottom = () => {
+    if (viewportRef.current) {
+      viewportRef.current.scrollTo({
+        top: viewportRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (viewportRef.current) {
       const { scrollHeight, scrollTop, clientHeight } = viewportRef.current;
-      // If user is near bottom (within 20px), treat as if they're at the bottom
       const isAtBottom = scrollHeight - scrollTop - clientHeight < 20;
-      
       setUserHasScrolled(!isAtBottom);
     }
   };
@@ -126,7 +191,6 @@ const ChatPage = () => {
     
     sendMessage(inputValue);
     setInputValue('');
-    // When user sends a message, we want to scroll to bottom
     setShouldScrollToBottom(true);
     setUserHasScrolled(false);
   };
@@ -134,7 +198,6 @@ const ChatPage = () => {
   const determineCommandCategory = (content: string): string | null => {
     const lowerContent = content.toLowerCase();
     
-    // Enhanced command detection with more flexibility
     if (lowerContent.includes('med-evac') || lowerContent.includes('medical') || 
         lowerContent.includes('evacuation') || lowerContent.includes('medic') || 
         lowerContent.includes('wounded') || lowerContent.includes('hurt')) {
@@ -223,47 +286,44 @@ const ChatPage = () => {
   const simulateBotResponse = async (userMessage: string) => {
     setIsTyping(true);
     
-    // More sophisticated pattern matching for improved responses
     const lowerMessage = userMessage.toLowerCase();
     
     setTimeout(async () => {
       let responseContent = "I understand your message, but I need more specific information to assist effectively. Could you provide more details or try one of the suggested commands?";
       let commandCategory = null;
       
-      // Enhanced flexible command detection
       if (lowerMessage.includes('enemy') || lowerMessage.includes('hostile') || lowerMessage.includes('opponent') || lowerMessage.includes('threat') || lowerMessage.includes('target')) {
-  responseContent = botResponses["enemy"];
-  commandCategory = 'enemy';
-} else if (lowerMessage.includes('med') || lowerMessage.includes('evac') || lowerMessage.includes('medical') || lowerMessage.includes('hurt') || lowerMessage.includes('wounded') || lowerMessage.includes('injury')) {
-  responseContent = botResponses["med-evac"];
-  commandCategory = 'medical';
-} else if (lowerMessage.includes('team') || lowerMessage.includes('squad') || lowerMessage.includes('status') || lowerMessage.includes('ally') || lowerMessage.includes('friend')) {
-  responseContent = botResponses["teammate"];
-  commandCategory = 'team';
-} else if (lowerMessage.includes('weather') || lowerMessage.includes('temperature') || lowerMessage.includes('rain') || lowerMessage.includes('climate')) {
-  responseContent = botResponses["weather"];
-  commandCategory = 'environment';
-} else if (lowerMessage.includes('location') || lowerMessage.includes('position') || lowerMessage.includes('where') || lowerMessage.includes('map') || lowerMessage.includes('gps')) {
-  responseContent = botResponses["location"];
-  commandCategory = 'navigation';
-} else if (lowerMessage.includes('backup') || lowerMessage.includes('help') || lowerMessage.includes('support') || lowerMessage.includes('assist') || lowerMessage.includes('reinforcement')) {
-  responseContent = botResponses["backup"];
-  commandCategory = 'support';
-} else if (lowerMessage.includes('tactic') || lowerMessage.includes('option') || lowerMessage.includes('plan') || lowerMessage.includes('strategy') || lowerMessage.includes('approach')) {
-  responseContent = botResponses["tactical"];
-  commandCategory = 'tactics';
-} else if (lowerMessage.includes('supply') || lowerMessage.includes('ammo') || lowerMessage.includes('equipment') || lowerMessage.includes('resource') || lowerMessage.includes('weapon')) {
-  responseContent = botResponses["supply"];
-  commandCategory = 'supplies';
-} else if (lowerMessage.includes('intel') || lowerMessage.includes('info') || lowerMessage.includes('report') || lowerMessage.includes('data') || lowerMessage.includes('situation')) {
-  responseContent = botResponses["intel"];
-  commandCategory = 'intelligence';
-} else if (lowerMessage.includes('comm') || lowerMessage.includes('radio') || lowerMessage.includes('contact') || lowerMessage.includes('message') || lowerMessage.includes('signal')) {
-  responseContent = botResponses["comms"];
-  commandCategory = 'communications';
-}
+        responseContent = botResponses["enemy"];
+        commandCategory = 'enemy';
+      } else if (lowerMessage.includes('med') || lowerMessage.includes('evac') || lowerMessage.includes('medical') || lowerMessage.includes('hurt') || lowerMessage.includes('wounded') || lowerMessage.includes('injury')) {
+        responseContent = botResponses["med-evac"];
+        commandCategory = 'medical';
+      } else if (lowerMessage.includes('team') || lowerMessage.includes('squad') || lowerMessage.includes('status') || lowerMessage.includes('ally') || lowerMessage.includes('friend')) {
+        responseContent = botResponses["teammate"];
+        commandCategory = 'team';
+      } else if (lowerMessage.includes('weather') || lowerMessage.includes('temperature') || lowerMessage.includes('rain') || lowerMessage.includes('climate')) {
+        responseContent = botResponses["weather"];
+        commandCategory = 'environment';
+      } else if (lowerMessage.includes('location') || lowerMessage.includes('position') || lowerMessage.includes('where') || lowerMessage.includes('map') || lowerMessage.includes('gps')) {
+        responseContent = botResponses["location"];
+        commandCategory = 'navigation';
+      } else if (lowerMessage.includes('backup') || lowerMessage.includes('help') || lowerMessage.includes('support') || lowerMessage.includes('assist') || lowerMessage.includes('reinforcement')) {
+        responseContent = botResponses["backup"];
+        commandCategory = 'support';
+      } else if (lowerMessage.includes('tactic') || lowerMessage.includes('option') || lowerMessage.includes('plan') || lowerMessage.includes('strategy') || lowerMessage.includes('approach')) {
+        responseContent = botResponses["tactical"];
+        commandCategory = 'tactics';
+      } else if (lowerMessage.includes('supply') || lowerMessage.includes('ammo') || lowerMessage.includes('equipment') || lowerMessage.includes('resource') || lowerMessage.includes('weapon')) {
+        responseContent = botResponses["supply"];
+        commandCategory = 'supplies';
+      } else if (lowerMessage.includes('intel') || lowerMessage.includes('info') || lowerMessage.includes('report') || lowerMessage.includes('data') || lowerMessage.includes('situation')) {
+        responseContent = botResponses["intel"];
+        commandCategory = 'intelligence';
+      } else if (lowerMessage.includes('comm') || lowerMessage.includes('radio') || lowerMessage.includes('contact') || lowerMessage.includes('message') || lowerMessage.includes('signal')) {
+        responseContent = botResponses["comms"];
+        commandCategory = 'communications';
+      }
 
-      
       const botMessage: MessageType = {
         id: Date.now().toString(),
         content: responseContent,
@@ -280,6 +340,13 @@ const ChatPage = () => {
           command_category: commandCategory,
           user_id: null
         });
+
+        // Speak the response with appropriate urgency
+        if (commandCategory === 'medical' || commandCategory === 'enemy') {
+          speak(responseContent, 'urgent');
+        } else {
+          speak(responseContent);
+        }
       } catch (error) {
         console.error('Error saving bot message:', error);
         toast({
@@ -290,7 +357,6 @@ const ChatPage = () => {
       }
       
       setIsTyping(false);
-      // After bot responds, we may want to scroll to bottom
       setShouldScrollToBottom(true);
     }, 1500);
   };
@@ -306,21 +372,17 @@ const ChatPage = () => {
     setIsListening(true);
   };
 
-
-
   const handleVoiceEnd = (transcript: string) => {
-  setIsListening(false);
-  if (transcript) {
-    setInputValue(transcript);
-    sendMessage(transcript);
+    setIsListening(false);
+    if (transcript) {
+      sendMessage(transcript);
+    setShouldScrollToBottom(true);
     setUserHasScrolled(false);
-  }
-};
-
+    }
+  };
 
   const handleSuggestionClick = (command: string) => {
     sendMessage(command);
-    // When clicking a suggestion, should scroll to bottom
     setShouldScrollToBottom(true);
     setUserHasScrolled(false);
   };
@@ -350,13 +412,26 @@ const ChatPage = () => {
                 <span className="text-sm text-battlefield-cyberTeal">Voice Ready</span>
               </div>
             </div>
+
+            {/* Voice toggle button */}
+            <button 
+              onClick={() => setVoiceEnabled(!voiceEnabled)}
+              className={`p-2 rounded-full ${voiceEnabled ? 'bg-battlefield-cyberTeal' : 'bg-gray-700'}`}
+              title={voiceEnabled ? "Mute voice" : "Unmute voice"}
+            >
+              {voiceEnabled ? (
+                <Volume2 className="h-5 w-5 text-white" />
+              ) : (
+                <VolumeX className="h-5 w-5 text-white" />
+              )}
+            </button>
           </div>
         </div>
       </header>
       
       {/* Main chat area */}
       <div className="flex-1 flex flex-col max-w-6xl mx-auto w-full p-4">
-        {/* Chat messages - Using ScrollArea component with improved scroll handling */}
+        {/* Chat messages */}
         <ScrollArea 
           className="flex-1 mb-4 px-2"
           style={{ height: 'calc(100vh - 350px)' }}
@@ -491,10 +566,9 @@ const ChatPage = () => {
           
           <div className="flex space-x-2 ml-2">
             <VoiceButton 
-              onVoiceStart={handleVoiceStart} 
+              onVoiceStart={handleVoiceStart}
               onVoiceEnd={handleVoiceEnd}
-              isListening={isListening}
-            />
+              isListening={isListening} isActive={false}            />
             
             <button 
               type="submit" 

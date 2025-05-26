@@ -20,8 +20,16 @@ const Footer = () => {
         <div>
           <h3 className="text-xl font-bold text-white mb-4">Quick Links</h3>
           <ul className="space-y-2">
-            <li><a href="#" className="hover:text-cyan-400 transition-colors">Features</a></li>
-            <li><a href="#" className="hover:text-cyan-400 transition-colors">Documentation</a></li>
+            <li><a href="#features" className="hover:text-cyan-400 transition-colors">Features</a></li>
+            <li>
+  <a
+    href="warmate research paper.docx"
+    className="hover:text-cyan-400 transition-colors"
+    
+  >
+    Documentation
+  </a>
+</li>
             <li><a href="mailto:run40081@gmail.com" className="hover:text-cyan-400 transition-colors">Support</a></li>
           </ul>
         </div>
